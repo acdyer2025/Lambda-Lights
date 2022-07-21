@@ -1,0 +1,1 @@
+powershell.exe ".\batchFiles\startHotspot.ps1"

@@ -1,0 +1,1 @@
+powershell -Command "Start-Process -FilePath 'C:\Program Files (x86)\LedFx\LedFx.lnk'"
