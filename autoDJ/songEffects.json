@@ -1,0 +1,22 @@
+{
+    "song1":{
+        "name": "Family Ties",
+        "id": "7Bpx2vsWfQFBACRz4h3IqH",
+        "scenes":{
+            "familyties000": 0,
+            "familyties016": 16000,
+            "familyties020": 20000,
+            "familyties024": 24000 
+        }
+    },
+    "song2":{
+        "name": "Test",
+        "id": "000000",
+        "scenes":{
+            "testscene": 0.00
+        }
+
+    }
+
+
+}
