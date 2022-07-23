@@ -104,13 +104,15 @@ def checkForSong(idlist, startTimer):
         songStatus[1] = currentPlayer['item']['id']
         songStatus[3] = currentPlayer['item']['duration_ms']
         songStatus[4] = currentPlayer['progress_ms']
+        print(songStatus)
     except Exception as e:
         print(e)
         songStatus = ['spotifyUnavailable', 'empty', 'empty', 0, 0]
         return
 
-    t = Timer(5, checkForSong, [idlist, True])
-    t.start()
+    if(startTimer == True):
+        t = Timer(5, checkForSong, [idlist, True])
+        t.start()
 
     for i in range(0, len(idlist)):
         if(songStatus[1] == idlist[i]):
