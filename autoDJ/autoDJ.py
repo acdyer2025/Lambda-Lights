@@ -3,51 +3,55 @@ import requests
 import time
 from threading import Timer
 
+#Spotipy is a python library that makes it very easy to work with the spotify API
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
-from secrets import Client_ID, Client_Secret
+from secrets import Client_ID, Client_Secret #stored in secrets.py - this file is ignored by GIT
 
 scope = "user-read-playback-state,user-modify-playback-state"
 spotify = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope, client_id=Client_ID, client_secret=Client_Secret, redirect_uri='http://localhost'))
 
-songStatus = ['','','',0,0]
-idList = []
-
-f = open('C:\\Users\\EY Zeta\\scripts\\lambdaLights\\autoDJ\\songEffects.json','r')
+#load song effects list
+f = open('.\\songEffects.json','r')
 songEffects = json.load(f)
 f.close()
 
-songList = list(songEffects)
+#songStatus = ['state', 'spotify_song_id', duration_ms, progress_ms]
+songStatus = ['',0,0,0]
+idList = []
+
 for i in range(0, len(songEffects)):
-    idList.append(songEffects[songList[i]]['id'])
+    idList.append(songEffects[i]['id'])
+
 print(idList)
 
 def main():
 
+    #start timer to poll spotify every 5 seconds to get current song
     t = Timer(5, checkForSong, [idList, True])
     t.start()
 
     while(True):
         global songStatus
-        #print(songStatus)
-        if(songStatus[0] == 'inList'):
+    
+        if(songStatus[0] == 'inList'): #the song spotify is currently playing is one that effects exist for
             print('found song in list')
-            currentSong = songStatus[2]
-            currentSongDuration = songStatus[3]
-            currentSongTimestamp = songStatus[4]
+            currentSong = songStatus[1]
+            currentSongDuration = songStatus[2]
+            currentSongTimestamp = songStatus[3]
             currentSongSceneList = list(songEffects[currentSong]['scenes'])
             timeStamps = []
-            for j in range(0, len(currentSongSceneList)):
-                timeStamps.append(songEffects[currentSong]['scenes'][currentSongSceneList[j]])
+            for i in range(0, len(currentSongSceneList)):
+                timeStamps.append(songEffects[currentSong]['scenes'][currentSongSceneList[i]])
             
             hasPlayed = list(timeStamps)
             
             prevTime = time.time()*1000
-            prevID = songStatus[1]
+            prevSong = songStatus[1]
 
             while((time.time()*1000 - prevTime) <= (currentSongDuration - currentSongTimestamp)):
                 #print("Running custom song effects")
-                if(songStatus[1] != prevID):
+                if(songStatus[1] != prevSong):
                     print("song changed")
                     break
                 for i in range(0, len(timeStamps)):
@@ -57,19 +61,19 @@ def main():
                             hasPlayed[i] = True
             
             print("finished with current song")
-            time.sleep(0.5)
+            time.sleep(1)
             checkForSong(idList, False)
 
         elif(songStatus[0] == 'none'):
             print('found song not present in list')
-            currentSongDuration = songStatus[3]
-            currentSongTimestamp = songStatus[4]
+            currentSongDuration = songStatus[2]
+            currentSongTimestamp = songStatus[3]
             prevTime = time.time()*1000
-            prevID = songStatus[1]
+            prevSong = songStatus[1]
 
             while((time.time()*1000 - prevTime) <= (currentSongDuration - currentSongTimestamp)):
                 #print("Running custom song effects")
-                if(songStatus[1] != prevID):
+                if(songStatus[1] != prevSong):
                     print("song changed")
                     break
 
@@ -78,7 +82,6 @@ def main():
             checkForSong(idList, False)
         elif(songStatus[0] == 'spotifyUnavailable'):
             print("Spotify Client Unavaiable")
-            break
         else:
             pass
 
@@ -99,29 +102,30 @@ def checkForSong(idlist, startTimer):
     global songStatus
     print("checking for song")
 
-    try:
-        currentPlayer = spotify.currently_playing()
-        songStatus[1] = currentPlayer['item']['id']
-        songStatus[3] = currentPlayer['item']['duration_ms']
-        songStatus[4] = currentPlayer['progress_ms']
-        print(songStatus)
-    except Exception as e:
-        print(e)
-        songStatus = ['spotifyUnavailable', 'empty', 'empty', 0, 0]
-        return
-
     if(startTimer == True):
         t = Timer(5, checkForSong, [idlist, True])
         t.start()
 
-    for i in range(0, len(idlist)):
-        if(songStatus[1] == idlist[i]):
-            songStatus = ['inList', songStatus[1], songList[i], currentPlayer['item']['duration_ms'], currentPlayer['progress_ms']]
+    try:
+        currentPlayer = spotify.currently_playing()
+        songID = currentPlayer['item']['id']
+        songStatus[2] = currentPlayer['item']['duration_ms']
+        songStatus[3] = currentPlayer['progress_ms']
+        print(songStatus)
+    except Exception as e:
+        print(e)
+        songStatus = ['spotifyUnavailable', -1, -1, -1]
+        return
+
+    for songIndex in range(0, len(idlist)):
+        if(songID == idlist[songIndex]):
+            songStatus[0] = 'inList'
+            songStatus[1] = songIndex
             return 
         else:
             pass
-    songStatus = ['none', songStatus[1], songStatus[2], currentPlayer['item']['duration_ms'], currentPlayer['progress_ms']]
-
+    songStatus[0] = 'none'
+    songStatus[1] = -1
     return
 
 main()

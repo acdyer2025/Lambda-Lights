@@ -1,7 +1,7 @@
-{
-    "song1":{
-        "name": "Family Ties",
+[
+    {
         "id": "7Bpx2vsWfQFBACRz4h3IqH",
+        "name": "Family Ties",
         "scenes":{
             "familyties000": 0,
             "familyties016": 16564,
@@ -9,19 +9,17 @@
             "familyties120": 70452,
             "familyties137": 97795,
             "familyties143": 103542
-        }
+            }
     },
-    "song2":{
-        "name": "UCLA",
+    
+    {
         "id": "3OaunNUlXXs5e2PXtNAzzG",
+        "name": "UCLA",
         "scenes":{
             "ucla000": 0,
             "ucla020": 20618,
             "ucla034": 34446,
             "ucla101": 61060
         }
-
     }
-
-
-}
+]

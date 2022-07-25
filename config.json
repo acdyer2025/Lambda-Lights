@@ -6,5 +6,6 @@
         "iBeamLongEsp": "192.168.137.252",
         "iBeamShortEsp": "192.168.137.253",
         "underBarEsp": "192.168.137.254" },
+        
     "initialConnectionTimeout": 2
 }
