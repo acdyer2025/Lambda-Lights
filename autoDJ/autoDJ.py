@@ -116,7 +116,6 @@ def checkForSong(idlist, startTimer):
 
     try:
         currentPlayer = spotify.currently_playing()
-        print(currentPlayer)
         songID = currentPlayer['item']['id']
         songStatus[2] = currentPlayer['item']['duration_ms']
         songStatus[3] = currentPlayer['progress_ms']
