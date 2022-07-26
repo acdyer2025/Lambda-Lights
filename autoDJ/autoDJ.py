@@ -73,13 +73,16 @@ def main():
 
         elif(songStatus[0] == 'none'):
             print('found song not present in list')
+            changeScene('default')
             currentSongDuration = songStatus[2]
             currentSongTimestamp = songStatus[3]
             prevTime = time.time()*1000
             prevSong = songStatus[1]
 
+            #wait in this loop until the exact end of the song, then check for next one.
+            #This allows us to theoreically get the effect to change right when the next song starts,
+            #as opposed to somewhere in the 3 second window that the spotify polling is occuring
             while((time.time()*1000 - prevTime) <= (currentSongDuration - currentSongTimestamp)):
-                #print("Running custom song effects")
                 if(songStatus[1] != prevSong):
                     print("song changed")
                     break
@@ -87,9 +90,9 @@ def main():
             print("finished with current song")
             time.sleep(1)
             checkForSong(idList, False)
+
         elif(songStatus[0] == 'spotifyUnavailable'):
             print("Spotify Client Unavaiable")
-            time.sleep(2)
         else:
             pass
 
@@ -110,6 +113,7 @@ def checkForSong(idlist, startTimer):
     global songStatus
     print("checking for song")
 
+    #
     if(startTimer == True):
         t = Timer(3, checkForSong, [idlist, True])
         t.start()
@@ -136,4 +140,5 @@ def checkForSong(idlist, startTimer):
     songStatus[1] = -1
     return
 
-main()
+if __name__ == "__main__":
+    main()

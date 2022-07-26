@@ -1,6 +1,11 @@
 # .gitignore
+
+#Spotify API Keys and Tokens
 autoDJ/secrets.py
 autoDJ/__pycache__
 autoDJ/.cache
+
+#Misc
 .vscode
-testingStuff.py
+autoDJ/testingStuff.py
+autoDJ/songEffectsBackup.json
