@@ -16,19 +16,18 @@ f = open('.\\songEffects.json','r')
 songEffects = json.load(f)
 f.close()
 
-#songStatus = ['state', 'spotify_song_id', duration_ms, progress_ms]
-songStatus = ['',0,0,0]
+#songStatus = ['state', index_in_songEffects.json, duration_ms, progress_ms, is_paused]
+songStatus = ['',0,0,0,False]
 idList = []
 
 for i in range(0, len(songEffects)):
     idList.append(songEffects[i]['id'])
-
 print(idList)
 
 def main():
 
-    #start timer to poll spotify every 5 seconds to get current song
-    t = Timer(5, checkForSong, [idList, True])
+    #start timer to poll spotify every 3 seconds to get current song
+    t = Timer(3, checkForSong, [idList, True])
     t.start()
 
     while(True):
@@ -36,16 +35,24 @@ def main():
     
         if(songStatus[0] == 'inList'): #the song spotify is currently playing is one that effects exist for
             print('found song in list')
-            currentSong = songStatus[1]
+            currentSong = songStatus[1] #this gives us the index of where the scenes for this song are in soundEffects.json
             currentSongDuration = songStatus[2]
             currentSongTimestamp = songStatus[3]
             currentSongSceneList = list(songEffects[currentSong]['scenes'])
-            timeStamps = []
+            timeStamps = [] 
             for i in range(0, len(currentSongSceneList)):
                 timeStamps.append(songEffects[currentSong]['scenes'][currentSongSceneList[i]])
             
-            hasPlayed = list(timeStamps)
+            #The following is a very hacky method to get the effects to trigger exactly on the right 
+            #  timestamp of the song, as polling spotify constatntly to get the playback position would
+            #  quickly rate limit us by spotify, which nobody wants
+            #  There are better ways to do this, but this was quick to implement and works surprising well
+            #Essentially, we figure out exactly where we are in the song and then use the basic time.time
+            #  module to keep track of the playback without having to poll spotify
+            #pausing the song breaks this because the effects will still be sent since we are not
+            #  reyling on spotify anymore for the timestamp
             
+            hasPlayed = list(timeStamps)
             prevTime = time.time()*1000
             prevSong = songStatus[1]
 
@@ -82,6 +89,7 @@ def main():
             checkForSong(idList, False)
         elif(songStatus[0] == 'spotifyUnavailable'):
             print("Spotify Client Unavaiable")
+            time.sleep(2)
         else:
             pass
 
@@ -103,11 +111,12 @@ def checkForSong(idlist, startTimer):
     print("checking for song")
 
     if(startTimer == True):
-        t = Timer(5, checkForSong, [idlist, True])
+        t = Timer(3, checkForSong, [idlist, True])
         t.start()
 
     try:
         currentPlayer = spotify.currently_playing()
+        print(currentPlayer)
         songID = currentPlayer['item']['id']
         songStatus[2] = currentPlayer['item']['duration_ms']
         songStatus[3] = currentPlayer['progress_ms']
