@@ -8,4 +8,4 @@ autoDJ/.cache
 #Misc
 .vscode
 autoDJ/testingStuff.py
-autoDJ/songEffectsBackup.json
+autoDJ/songTriggersBackup.json

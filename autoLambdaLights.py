@@ -85,4 +85,6 @@ def ping(host, packets):
     command = [r'.\batchFiles\ping.bat ', str(packets), host]
     return subprocess.call(command, stdout=subprocess.DEVNULL) == 0
 
-main()
+
+if __name__ == "__main__":
+    main()

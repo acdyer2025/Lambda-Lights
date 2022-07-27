@@ -5,6 +5,7 @@ import json
 import requests
 import time
 import re
+from texttable import Texttable
 
 #Spotipy is a python library that makes it very easy to work with the spotify API
 import spotipy
@@ -18,28 +19,43 @@ spotifyDevice = spotify.devices()
 spotifyDeviceID = spotifyDevice['devices'][0]['id']
 
 #load current song effects configuration
-f = open('.\\songEffects.json','r')
-songEffects = json.load(f)
+f = open('.\\songTriggers.json','r')
+songTriggers = json.load(f)
 f.close()
 
 idList = []
 
-for i in range(0, len(songEffects)):
-    idList.append(songEffects[i]['id'])
+for i in range(0, len(songTriggers)):
+    idList.append(songTriggers[i]['id'])
+
 
 def main():
-    while(True):
+    state = 0
+    while(state == 0): #Ready to add a new trigger or view current ones
+
+        table = Texttable()
+        table.header(["Command", "Description", "Parameters"])
+        table.add_row(['add', 'adds a new trigger at the current timestamp in the current spotify song with the current light effects', 'none'])
+        table.add_row(['listall', 'lists all the songs with current triggers', 'none'])
+        table.add_row(['list <songIndex>', 'lists all the triggers of the provided song index', 'index of song in songTriggers. Find using command listall'])
+        print(table.draw())
+
         userInput = input('Type a command press enter \n')
         match userInput:
             case 'add':
-                newIndex, newScene = addTrigger()
-            case 'test':
-                testTrigger(newIndex, newScene)
+                state = 1
+            case 'listall':
+                table = Texttable()
+                table.header(['songIndex', 'songName', '# of triggers'])
+                for i in range(0, len(songTriggers)):
+                    table.add_row([i, songTriggers[i]])
+
             
 
+
 def saveEffectsToFile():
-    f = open('.\\songEffects.json','w')
-    json.dump(songEffects, f, indent=4)
+    f = open('.\\songTriggers.json','w')
+    json.dump(songTriggers, f, indent=4)
     f.close()
 
 def addScene(sceneName):
@@ -122,8 +138,7 @@ def addTrigger():
         if(songID == idList[i]):
             songIndex = i
             inList = True
-            data = {sceneName:currentTimestamp}
-            songEffects[i]['scenes'][sceneName] = currentTimestamp
+            songTriggers[i]['scenes'][sceneName] = currentTimestamp
             saveEffectsToFile()
             break
         else:
@@ -136,7 +151,7 @@ def addTrigger():
             sceneName:currentTimestamp
             }
         }
-        songEffects.append(data)
+        songTriggers.append(data)
         saveEffectsToFile()
 
     addScene(sceneName)
@@ -155,17 +170,17 @@ def testTrigger(songIndex, sceneName):
     except:
         pass
     
-    if((songEffects[songIndex]['scenes'][sceneName] - 2000) < 0):
+    if((songTriggers[songIndex]['scenes'][sceneName] - 2000) < 0):
         spotify.seek_track(0, spotifyDeviceID)
     else:
-        spotify.seek_track(songEffects[songIndex]['scenes'][sceneName] - 2000, spotifyDeviceID)
+        spotify.seek_track(songTriggers[songIndex]['scenes'][sceneName] - 2000, spotifyDeviceID)
     
     spotify.start_playback()
     time.sleep(2)
     changeScene(sceneName)
     time.sleep(2)
     spotify.pause_playback()
-    spotify.seek_track(songEffects[songIndex]['scenes'][sceneName])
+    spotify.seek_track(songTriggers[songIndex]['scenes'][sceneName])
 
 
 if __name__ == "__main__":
