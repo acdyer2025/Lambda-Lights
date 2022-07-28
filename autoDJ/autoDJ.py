@@ -12,16 +12,16 @@ scope = "user-read-playback-state,user-modify-playback-state"
 spotify = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope, client_id=Client_ID, client_secret=Client_Secret, redirect_uri='http://localhost'))
 
 #load song effects list
-f = open('.\\songEffects.json','r')
-songEffects = json.load(f)
+f = open('.\\songTriggers.json','r')
+songTriggers = json.load(f)
 f.close()
 
-#songStatus = ['state', index_in_songEffects.json, duration_ms, progress_ms, is_paused]
+#songStatus = ['state', index_in_songTriggers.json, duration_ms, progress_ms, is_paused]
 songStatus = ['',0,0,0,False]
 idList = []
 
-for i in range(0, len(songEffects)):
-    idList.append(songEffects[i]['id'])
+for i in range(0, len(songTriggers)):
+    idList.append(songTriggers[i]['id'])
 print(idList)
 
 def main():
@@ -38,10 +38,10 @@ def main():
             currentSong = songStatus[1] #this gives us the index of where the scenes for this song are in soundEffects.json
             currentSongDuration = songStatus[2]
             currentSongTimestamp = songStatus[3]
-            currentSongSceneList = list(songEffects[currentSong]['scenes'])
+            currentSongSceneList = list(songTriggers[currentSong]['scenes'])
             timeStamps = [] 
             for i in range(0, len(currentSongSceneList)):
-                timeStamps.append(songEffects[currentSong]['scenes'][currentSongSceneList[i]])
+                timeStamps.append(songTriggers[currentSong]['scenes'][currentSongSceneList[i]])
             
             #The following is a very hacky method to get the effects to trigger exactly on the right 
             #  timestamp of the song, as polling spotify constatntly to get the playback position would

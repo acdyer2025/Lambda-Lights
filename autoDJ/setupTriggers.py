@@ -33,22 +33,26 @@ def main():
     state = 0
     while(state == 0): #Ready to add a new trigger or view current ones
 
-        table = Texttable()
-        table.header(["Command", "Description", "Parameters"])
-        table.add_row(['add', 'adds a new trigger at the current timestamp in the current spotify song with the current light effects', 'none'])
-        table.add_row(['listall', 'lists all the songs with current triggers', 'none'])
-        table.add_row(['list <songIndex>', 'lists all the triggers of the provided song index', 'index of song in songTriggers. Find using command listall'])
-        print(table.draw())
 
-        userInput = input('Type a command press enter \n')
+
+        userInput = input('Type a command and press enter. Type "help" for a list of commands\n')
         match userInput:
+            case 'help':
+                table = Texttable()
+                table.header(["Command", "Description", "Parameters"])
+                table.add_row(['add', 'adds a new trigger at the current timestamp in the current spotify song with the current light effects', 'none'])
+                table.add_row(['listall', 'lists all the songs with current triggers', 'none'])
+                table.add_row(['list <songIndex>', 'lists all the triggers of the provided song index', 'index of song in songTriggers. Find using command listall'])
+                print(table.draw())
+                
             case 'add':
                 state = 1
             case 'listall':
                 table = Texttable()
                 table.header(['songIndex', 'songName', '# of triggers'])
                 for i in range(0, len(songTriggers)):
-                    table.add_row([i, songTriggers[i]])
+                    table.add_row([i, songTriggers[i]['name'], len(list(songTriggers[i]['scenes']))])
+                print(table.draw())
 
             
 
