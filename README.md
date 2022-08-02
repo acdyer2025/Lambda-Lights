@@ -8,6 +8,10 @@ Lambda Lights consists of 2000 WS2815 individually addressable LED pixels connec
 
 This repository also contains a Python script that runs on the laptop on startup that starts all the required programs and sets the network configuration on the laptop automatically. During the lightshows, it also periodically checks to make sure everything is still connected and functioning as expected, taking steps if necessary to fix issues that may come up without the user having to intervene at all.
 
+# Integrations
+
+My related project, LedFx-autoDJ, was designed for this installation as a way to easily program the strips to change their effect based on timestamps in Spotify songs.
+
 # DOCUMENTATION TODO
 
 * Add detailed schematics of main power distribution box
