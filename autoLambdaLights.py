@@ -25,25 +25,30 @@ def main():
     while(True):
         while(state == 0):#test if built in mobile hotspot is turned on, if not turn it on    
             try:
-                if(ping(config['hotspotAddress'], 1) == False):
+                pingStatus = ping(config['hotspotAddress'], 1)
+                if(pingStatus == 0):
                     print("Starting Hotspot...")
                     subprocess.Popen([r'.\batchFiles\\hotspot.bat'])
-                else:
+                elif(pingStatus == 1):
                     print("Hotspot Connected")
                     state = 1
-            except:
-                print("Hotspot could not be started, or is already turned on. Please check batchFiles\hotspot.bat")
+                else:
+                    print("Invalid hotspot IP address. Check config.json")
+            except Exception as e:
+                print(e)
 
         while(state == 1): 
-            print(state)   
             for i in range(len(config['deviceAddresses'])):   
-                try: 
-                    if(ping(config['deviceAddresses'][deviceList[i]], 1) == False):
+                try:
+                    pingStatus = ping(config['deviceAddresses'][deviceList[i]], 1)
+                    if(pingStatus == 0):
                         print(deviceList[i] + " is not connected to hotspot.\n")
                         connectedDevices[i] = False
-                    else:
+                    elif(pingStatus == 1):
                         print(deviceList[i] + " is connected to hotspot")
                         connectedDevices[i] = True
+                    else:
+                        print("Invalid " +deviceList[i]+ " IP address. Check config.json")
                 except Exception as e:
                     print(e)
             
@@ -77,18 +82,23 @@ def main():
                 else:
                     pass
             try:
-                if(ping(config['hotspotAddress'], 1) == False):
+                pingStatus = ping(config['hotspotAddress'], 1)
+                if(pingStatus != 1):
                     state = 0
-            except:
+            except Exception as e:
+                print(e)
                 state = 0
+           
 
 def ping(host, packets):
     command = [r'.\batchFiles\ping.bat ', str(packets), host]
     try:    
-        return subprocess.call(command, stdout=subprocess.DEVNULL) == 0
+        returnValue = subprocess.call(command)
+        return returnValue
     except Exception as e:
         print(e)
-        return False
+        return 3
+
 
 if __name__ == "__main__":
     main()

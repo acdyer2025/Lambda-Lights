@@ -1,13 +1,10 @@
 {
-    "hotspotAddress": "192.168.137.1",
+    "hotspotAddress": "ip_address_here",
 
     "deviceAddresses": {
-        "fireplaceEsp": "192.168.137.251",
-        "iBeamLongEsp": "192.168.137.252",
-        "iBeamShortEsp": "192.168.137.253",
-        "underBarEsp": "192.168.137.254" },
+        "exampleDeviceName": "ip_address_here",
+        "exampleDeviceName2": "ip_address_here"
+        },
 
-    "initialConnectionTimeout": 2,
-    "ledFxPath": ""
-    
+    "ledFxPath": "path_to_LedFx"
 }
