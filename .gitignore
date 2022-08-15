@@ -1,6 +1,5 @@
 # .gitignore
-
+venv/
 
 #Misc
-.vscode
 configBackup.json
