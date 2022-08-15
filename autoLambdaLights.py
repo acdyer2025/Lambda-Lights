@@ -76,7 +76,7 @@ def main():
                     if(responseObject["live"] == False):
                         print(deviceList[i] + " has disconnected from LedFx. Restarting LedFx")
                         subprocess.Popen([r'.\batchFiles\stopLedFx.bat'])
-                        subprocess.Popen([r'.\batchFiles\startLedFx.bat'])
+                        subprocess.Popen([r'.\batchFiles\startLedFx.bat', config['ledFxPath']])
                         time.sleep(10)
                     else:
                         print("Connected to hotspot, devices, and LedFx")
