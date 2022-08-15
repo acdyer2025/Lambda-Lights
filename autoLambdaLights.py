@@ -88,6 +88,8 @@ def main():
             except Exception as e:
                 print(e)
                 state = 0
+            
+            time.sleep(5)
            
 
 def ping(host, packets):

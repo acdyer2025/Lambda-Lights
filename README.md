@@ -4,9 +4,21 @@ The Lambda Lights are a large LED strip installation designed to provide dancing
 Please note that this installation is still in its infanacy, and many changes are expected to happen in the future before a final design is reached. Likewise, this repo is still very much a work in progress.
 
 # General Overview
-Lambda Lights consists of 2000 WS2815 individually addressable LED pixels connected in four distinct sections. basementRender.png shows how these four sections are arranged. Each section consists of a dedicated ESP32 microcontroller running software called WLED (see https://kno.wled.ge/ for more information). Each of those WLED instances is connected to software running on a dedicated laptop called LedFx (see https://www.ledfx.app/ for more information). This allows for each section to be set to a different music reactive effect, all based on the sound input on the dedicated laptop. 
+Lambda Lights consists of 2000 WS2815 individually addressable LED pixels connected in four distinct sections. basementRender.png shows how these four sections are arranged. Each section consists of a dedicated ESP32 microcontroller running a program called WLED. Each of those ESP32's is connected through WLED to software called LedFx running on a dedicated computer or laptop. This allows for each section to be set to a different music reactive effect, all based on the sound input on the dedicated computer or laptop. 
 
 This repository also contains a Python script that runs on the laptop on startup that starts all the required programs and sets the network configuration on the laptop automatically. During the lightshows, it also periodically checks to make sure everything is still connected and functioning as expected, taking steps if necessary to fix issues that may come up without the user having to intervene at all.
+
+# Installation
+* Install a virtual audio cable - I use https://vb-audio.com/Cable/
+* Flash WLED onto each ESP32 - see https://kno.wled.ge/
+* Install LedFx (I use a fork of the original LedFx software called BladeMod. It has a better user interface and some slighty different effect settings) - https://github.com/YeonV/LedFx-Frontend-v2
+    * **Note: Currently tested to work with release Beta46 - https://github.com/YeonV/LedFx-Frontend-v2/releases/tag/2.0.0-beta46**
+    * **From that release, navigate to assets then download and run LedFx_CC-beta46--win-setup.exe**
+
+* Fill in config.json
+    * replace hotspotAddress with your hotspot's ip address (Note: Must be a 2.4 Ghz hotspot)
+    * add to device addresses the names and ip address's of your WLED devices (name can be anything)
+
 
 # Integrations
 
