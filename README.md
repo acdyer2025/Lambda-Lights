@@ -8,17 +8,31 @@ Lambda Lights consists of 2000 WS2815 individually addressable LED pixels connec
 
 This repository also contains a Python script that runs on the laptop on startup that starts all the required programs and sets the network configuration on the laptop automatically. During the lightshows, it also periodically checks to make sure everything is still connected and functioning as expected, taking steps if necessary to fix issues that may come up without the user having to intervene at all.
 
-# Installation
-* Install a virtual audio cable - I use https://vb-audio.com/Cable/
+# Installation Steps
+* Clone this repository
+* Create a new python virtual enviroment (Optional, but highly recommended)
+    * Install required packages
+
 * Flash WLED onto each ESP32 - see https://kno.wled.ge/
+    * Configure WLED with the correct network settings
+    * set the static ip address to whatever you want the the ip address for each device to be
+
 * Install LedFx (I use a fork of the original LedFx software called BladeMod. It has a better user interface and some slighty different effect settings) - https://github.com/YeonV/LedFx-Frontend-v2
     * **Note: Currently tested to work with release Beta46 - https://github.com/YeonV/LedFx-Frontend-v2/releases/tag/2.0.0-beta46**
     * **From that release, navigate to assets then download and run LedFx_CC-beta46--win-setup.exe**
 
+* Configure LedFx
+    * set up all devices in LedFx with ip addresses you set in WLED
+
 * Fill in config.json
     * replace hotspotAddress with your hotspot's ip address (Note: Must be a 2.4 Ghz hotspot)
-    * add to device addresses the names and ip address's of your WLED devices (name can be anything)
+    * add to device addresses the names and ip address's of your WLED devices (name can be anything). The ip must match the ip of the device in LedFx and WLED
+    * replace ledFxPath with the path to your ledFx executable
 
+* Install a virtual audio cable - I use https://vb-audio.com/Cable/
+    * This allows you to send the audio to both ledFx and your speakers. Make sure you set the audio input in LedFx accordinly.
+    You might have to go to Control Panel - Sound - Recording - Cable Output Properties - Listen and check the 'listen' box as
+    well as select Speakers in the playback through device menu
 
 # Integrations
 
